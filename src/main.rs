@@ -9,6 +9,11 @@ struct ExampleStruct {
     data: Vec<u8>,
 }
 
+enum SExpr {
+    List(Vec<SExpr>),
+    Atom(String),
+}
+
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
 fn main() -> Result<()> {
@@ -19,9 +24,11 @@ fn main() -> Result<()> {
         }],
         data: vec![1, 2, 3],
     };
+
     let json_output = serde_json::to_string(&example_struct)?;
     println!("json_output: {json_output}");
     let sexpr_output = serde_sexpr::to_string(&example_struct)?;
     println!("sexpr_output: {sexpr_output}");
+
     Ok(())
 }
