@@ -24,6 +24,12 @@ fn atom(input: &str) -> IResult<&str, SExpr> {
     Ok((input, SExpr::Atom(consumed.to_string())))
 }
 
+fn empty_list(input: &str) -> IResult<&str, SExpr> {
+    let (input, _) = tag("(")(input)?;
+    let (input, _) = tag(")")(input)?;
+    Ok((input, SExpr::List(vec![])))
+}
+
 fn list(input: &str) -> IResult<&str, SExpr> {
     let (input, _) = tag("(")(input)?;
     let (input, list) = separated_list0(tag(" "), sexpr)(input)?;
@@ -33,7 +39,7 @@ fn list(input: &str) -> IResult<&str, SExpr> {
 }
 
 fn sexpr(input: &str) -> IResult<&str, SExpr> {
-    alt((list, atom))(input)
+    alt((alt((empty_list, list)), atom))(input)
 }
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
