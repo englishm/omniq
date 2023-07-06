@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json;
+use serde_sexpr;
 use std::error;
 
 #[derive(Deserialize, Serialize)]
@@ -18,7 +19,9 @@ fn main() -> Result<()> {
         }],
         data: vec![1, 2, 3],
     };
-    let output = serde_json::to_string(&example_struct)?;
-    println!("output: {output}");
+    let json_output = serde_json::to_string(&example_struct)?;
+    println!("json_output: {json_output}");
+    let sexpr_output = serde_sexpr::to_string(&example_struct)?;
+    println!("sexpr_output: {sexpr_output}");
     Ok(())
 }
