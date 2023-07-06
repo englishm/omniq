@@ -1,3 +1,5 @@
+use nom::bytes::complete::take_till;
+use nom::IResult;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_sexpr;
@@ -12,6 +14,11 @@ struct ExampleStruct {
 enum SExpr {
     List(Vec<SExpr>),
     Atom(String),
+}
+
+fn atom(input: &str) -> IResult<&str, SExpr> {
+    let (consumed, rest) = take_till(|c: char| c.is_whitespace())(input)?;
+    Ok((rest, SExpr::Atom(consumed.to_string())))
 }
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
